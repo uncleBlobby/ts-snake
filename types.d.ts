@@ -75,4 +75,16 @@ export interface Coord {
     move: string;
     shout?: string;
   }
+
+  export interface Move {
+    direction: string;
+    score: number;
+  }
+
+  export interface ScoredMoves {
+    left: Move;
+    right: Move;
+    up: Move;
+    down: Move;
+  }
   
