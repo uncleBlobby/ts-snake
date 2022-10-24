@@ -157,20 +157,22 @@ export const PreferAwayFromOtherSnakeBody = (gameState: GameState, scoredMoves: 
 export const PreferTowardOwnTail = (gameState: GameState, scoredMoves: ScoredMoves) => {
     const myHead = gameState.you.body[0];
     const myTail = gameState.you.body[gameState.you.body.length - 1];
+    const myHealth = gameState.you.health;
+    const tailPrefValue = myHealth / 2;
 
     const directionToTail: string = getGeneralDirectionToCoord(gameState, myTail);
     switch(directionToTail){
         case "right":
-          scoredMoves.right.score += 50;
+          scoredMoves.right.score += tailPrefValue;
           break;
         case "left":
-          scoredMoves.left.score += 50;
+          scoredMoves.left.score += tailPrefValue;
           break;
         case "up":
-          scoredMoves.up.score += 50;
+          scoredMoves.up.score += tailPrefValue;
           break;
         case "down":
-          scoredMoves.down.score += 50;
+          scoredMoves.down.score += tailPrefValue;
           break;
         default:
           break;
