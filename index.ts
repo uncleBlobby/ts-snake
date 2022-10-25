@@ -15,6 +15,9 @@ import { getClosestFoodCoord, getGeneralDirectionToCoord, getHighScoreMove, } fr
 import runServer from './server';
 import { GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
 
+
+
+
 // info is called when you create your Battlesnake on play.battlesnake.com
 // and controls your Battlesnake's appearance
 // TIP: If you open your Battlesnake URL in a browser you should see this data
