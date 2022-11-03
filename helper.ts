@@ -1,5 +1,41 @@
 import { GameState, Coord, Move, ScoredMoves } from "./types";
 
+export const checkIfCoordIsSnake = (gs: GameState, target: Coord): boolean => {
+    const snakes = gs.board.snakes;
+
+    for (let i = 0; i < gs.board.snakes.length; i++){
+        for (let j = 0; j < gs.board.snakes[i].body.length; j++){
+            if (target.x == gs.board.snakes[i].body[j].x && target.y == gs.board.snakes[i].body[j].y){
+                return true;
+            }
+        }
+    }
+
+    return false;
+
+}
+
+export const countOpenCoordsRight = (gs: GameState): number => {
+    let count = 0;
+    let myHead = gs.you.head;
+
+    
+
+    for (let i = myHead.x; i < gs.board.width - 1; i++){
+        let next: Coord = {x : myHead.x + i, y: myHead.y};
+        if (!checkIfCoordIsSnake(gs, next)){
+            count += 1;
+        }
+        else {
+            return count;
+            break;
+        }
+    }
+    
+
+    return count;
+}
+
 export const getHighScoreMove = (moves: ScoredMoves) => {
     let bestMove: Move = moves.left;
 
