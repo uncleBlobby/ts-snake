@@ -50,31 +50,53 @@ export const AvoidOwnBodyMoves = (gameState: GameState, scoredMoves: ScoredMoves
     const myHead = gameState.you.body[0];
     const myBody = gameState.you.body;
 
-    for (let i = 0; i < myBody.length; i++){
-      if (myHead.x + 1 == myBody[i].x && myHead.y == myBody[i].y){
-        
-        scoredMoves.right.score -= 1000;
+    if (myBody[myBody.length] != myBody[myBody.length-1]){
+      for (let i = 0; i < myBody.length - 1; i++){
+        if (myHead.x + 1 == myBody[i].x && myHead.y == myBody[i].y){
+          
+          scoredMoves.right.score -= 1000;
+        }
+        if (myHead.x - 1 == myBody[i].x && myHead.y == myBody[i].y){
+          
+          scoredMoves.left.score -= 1000;
+        }
+        if (myHead.x == myBody[i].x && myHead.y + 1 == myBody[i].y){
+          
+          scoredMoves.up.score -= 1000;
+        }
+        if (myHead.x == myBody[i].x && myHead.y - 1== myBody[i].y){
+          
+          scoredMoves.down.score -= 1000;
+        }
       }
-      if (myHead.x - 1 == myBody[i].x && myHead.y == myBody[i].y){
-        
-        scoredMoves.left.score -= 1000;
-      }
-      if (myHead.x == myBody[i].x && myHead.y + 1 == myBody[i].y){
-        
-        scoredMoves.up.score -= 1000;
-      }
-      if (myHead.x == myBody[i].x && myHead.y - 1== myBody[i].y){
-        
-        scoredMoves.down.score -= 1000;
+    } else {
+      for (let i = 0; i < myBody.length; i++){
+        if (myHead.x + 1 == myBody[i].x && myHead.y == myBody[i].y){
+          
+          scoredMoves.right.score -= 1000;
+        }
+        if (myHead.x - 1 == myBody[i].x && myHead.y == myBody[i].y){
+          
+          scoredMoves.left.score -= 1000;
+        }
+        if (myHead.x == myBody[i].x && myHead.y + 1 == myBody[i].y){
+          
+          scoredMoves.up.score -= 1000;
+        }
+        if (myHead.x == myBody[i].x && myHead.y - 1== myBody[i].y){
+          
+          scoredMoves.down.score -= 1000;
+        }
       }
     }
+    
 }
 
 export const PreferTowardsClosestFoodMoves = (gameState: GameState, scoredMoves: ScoredMoves) => {
     let closestFoodCoord = getClosestFoodCoord(gameState);
     const myHead = gameState.you.body[0];
 
-    if (gameState.you.health - 15 < getDistanceBetweenCoords(myHead, closestFoodCoord)){
+    if (gameState.you.health - 35 < getDistanceBetweenCoords(myHead, closestFoodCoord)){
       switch(getGeneralDirectionToCoord(gameState, closestFoodCoord)){
         case "right":
           scoredMoves.right.score += 100;
@@ -92,6 +114,42 @@ export const PreferTowardsClosestFoodMoves = (gameState: GameState, scoredMoves:
           break;
       }
     }
+}
+
+export const StillPreferFoodEvenIfNotStarving = (gs: GameState, moves: ScoredMoves) => {
+  const closestFoodCoord = getClosestFoodCoord(gs);
+  const myHead = gs.you.body[0];
+
+  const myDistanceToClosestFood = getDistanceBetweenCoords(myHead, closestFoodCoord)
+
+  let meBeClosestToTheFood = true;
+
+  for (let i = 0; i < gs.board.snakes.length; i++){
+    if (myDistanceToClosestFood > getDistanceBetweenCoords(gs.board.snakes[i].head, closestFoodCoord)){
+      meBeClosestToTheFood = false;
+    }
+  }
+
+  if (meBeClosestToTheFood){
+    switch(getGeneralDirectionToCoord(gs, closestFoodCoord)){
+      case "right":
+        moves.right.score += 35;
+        break;
+      case "left":
+        moves.left.score += 35;
+        break;
+      case "up":
+        moves.up.score += 35;
+        break;
+      case "down":
+        moves.down.score += 35;
+        break;
+      default:
+        break;
+    }
+  }
+  
+  
 }
 
 export const PreferTowardCentreMoves = (gameState: GameState, scoredMoves: ScoredMoves) => {
@@ -154,11 +212,61 @@ export const PreferAwayFromOtherSnakeBody = (gameState: GameState, scoredMoves: 
     }
 }
 
+export const PreferAwayFromLargerSnakeHead = (gs: GameState, moves: ScoredMoves) => {
+  const opponents = gs.board.snakes;
+  const myHead = gs.you.body[0];
+
+  for (let i = 0; i < opponents.length; i++){
+    if(opponents[i].id != gs.you.id){
+      let enemy = opponents[i];
+      if (enemy.body.length >= gs.you.body.length){
+        if (myHead.x + 2 == enemy.head.x && myHead.y == enemy.head.y){
+          moves.right.score -= 155;
+        }
+  
+        if (myHead.x - 2 == enemy.head.x && myHead.y == enemy.head.y){
+          moves.left.score -= 155;
+        }
+  
+        if (myHead.x == enemy.head.x && myHead.y + 2 == enemy.head.y){
+          moves.up.score -= 155;
+        }
+  
+        if (myHead.x == enemy.head.x && myHead.y -2 == enemy.head.y){
+          moves.down.score -= 155;
+        }
+
+        if (myHead.x == enemy.head.x + 1 && myHead.y == enemy.head.y - 1){
+          moves.up.score -= 155;
+          moves.left.score -= 155;
+        }
+
+        if (myHead.x == enemy.head.x - 1 && myHead.y == enemy.head.y - 1){
+          moves.up.score -= 155;
+          moves.right.score -= 155;
+        }
+
+        if (myHead.x == enemy.head.x + 1 && myHead.y == enemy.head.y + 1){
+          moves.down.score -= 155;
+          moves.left.score -= 155;
+        }
+
+        if (myHead.x == enemy.head.x - 1 && myHead.y == enemy.head.y + 1){
+          moves.down.score -= 155;
+          moves.right.score -= 155;
+        }
+
+      }
+      
+    }
+  }
+}
+
 export const PreferTowardOwnTail = (gameState: GameState, scoredMoves: ScoredMoves) => {
     const myHead = gameState.you.body[0];
     const myTail = gameState.you.body[gameState.you.body.length - 1];
     const myHealth = gameState.you.health;
-    const tailPrefValue = myHealth / 2;
+    const tailPrefValue = myHealth / 4;
 
     const directionToTail: string = getGeneralDirectionToCoord(gameState, myTail);
     switch(directionToTail){

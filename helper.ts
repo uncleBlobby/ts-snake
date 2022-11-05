@@ -15,26 +15,67 @@ export const checkIfCoordIsSnake = (gs: GameState, target: Coord): boolean => {
 
 }
 
-export const countOpenCoordsRight = (gs: GameState): number => {
-    let count = 0;
-    let myHead = gs.you.head;
+export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
+    let myHead: Coord = gs.you.head;
 
-    
+    // distance from my head to each wall
 
-    for (let i = myHead.x; i < gs.board.width - 1; i++){
-        let next: Coord = {x : myHead.x + i, y: myHead.y};
-        if (!checkIfCoordIsSnake(gs, next)){
-            count += 1;
-        }
-        else {
-            return count;
+    const distanceToLeftWall = myHead.x
+    let clearanceLeft = 0;
+    const distanceToRightWall = gs.board.width - myHead.x
+    let clearanceRight = 0;
+
+    const distanceToTopWall = gs.board.height - myHead.y
+    let clearanceTop = 0;
+    const distanceToBottomWall = myHead.y;
+    let clearanceBottom = 0;
+
+    for (let i = myHead.x - 1; i >= 0; i--){
+        if (!checkIfCoordIsSnake(gs, {x: i, y: myHead.y})){
+            clearanceLeft++;
+        } else {
             break;
         }
     }
+
+    for (let i = myHead.x + 1; i < gs.board.width; i++){
+        if (!checkIfCoordIsSnake(gs, {x: i, y: myHead.y})){
+            clearanceRight++;
+        } else {
+            break;
+        }
+    }
+
+    for (let i = myHead.y - 1; i >= 0; i--){
+        if (!checkIfCoordIsSnake(gs, {x: myHead.x, y: i})){
+            clearanceBottom++;
+        } else {
+            break;
+        }
+    }
+
+    for (let i = myHead.y + 1; i < gs.board.height; i++){
+        if (!checkIfCoordIsSnake(gs, {x: myHead.x, y: i})){
+            clearanceTop++;
+        } else {
+            break;
+        }
+    }
+
+    console.log(`clearanceLeft: ${clearanceLeft}`)
+    console.log(`clearanceRight: ${clearanceRight}`)
+    console.log(`clearanceDown: ${clearanceBottom}`)
+    console.log(`clearanceUp: ${clearanceTop}`)
     
 
-    return count;
+
+    moves.left.score += clearanceLeft * 15;
+    moves.right.score += clearanceRight * 15;
+    moves.down.score += clearanceBottom * 15;
+    moves.up.score += clearanceTop * 15;
 }
+
+
 
 export const getHighScoreMove = (moves: ScoredMoves) => {
     let bestMove: Move = moves.left;
@@ -106,4 +147,17 @@ export const getGeneralDirectionToCoord = (gameState: GameState, target: Coord) 
     }
 
     return "";
+}
+
+export const generateRandomHexColor = () => {
+    let r = Math.floor(Math.random() * 255) + 50;
+    const rHex = r.toString(16);
+    let g = Math.floor(Math.random() * 255) + 50;
+    const gHex = g.toString(16);
+    let b = Math.floor(Math.random() * 255) + 50;
+    const bHex = b.toString(16);
+
+    console.log(`#${rHex}${gHex}${bHex}`)
+    let hexString = `#${rHex}${gHex}${bHex}`;
+    return hexString;
 }

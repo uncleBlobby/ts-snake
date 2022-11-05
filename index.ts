@@ -10,8 +10,8 @@
 // To get you started we've included code to prevent your Battlesnake from moving backwards.
 // For more info see docs.battlesnake.com
 
-import { AvoidNeckMoves, AvoidOutOfBoundsMoves, AvoidOwnBodyMoves, PreferAwayFromOtherSnakeBody, PreferTowardCentreMoves, PreferTowardOwnTail, PreferTowardsClosestFoodMoves } from './brains';
-import { getClosestFoodCoord, getGeneralDirectionToCoord, getHighScoreMove, } from './helper';
+import { AvoidNeckMoves, AvoidOutOfBoundsMoves, AvoidOwnBodyMoves, PreferAwayFromLargerSnakeHead, PreferAwayFromOtherSnakeBody, PreferTowardCentreMoves, PreferTowardOwnTail, PreferTowardsClosestFoodMoves, StillPreferFoodEvenIfNotStarving } from './brains';
+import { getClosestFoodCoord, getGeneralDirectionToCoord, getHighScoreMove, generateRandomHexColor, CountOpenSquares } from './helper';
 import runServer from './server';
 import { GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
 
@@ -21,12 +21,14 @@ import { GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
 function info(): InfoResponse {
   console.log("INFO");
 
+  const hexColor = generateRandomHexColor();
+
   return {
     apiversion: "1",
     author: "uncleBlobby",       // TODO: Your Battlesnake Username
-    color: "#888888", // TODO: Choose color
-    head: "default",  // TODO: Choose head
-    tail: "default",  // TODO: Choose tail
+    color: hexColor, // TODO: Choose color
+    head: "iguana",  // TODO: Choose head
+    tail: "iguana",  // TODO: Choose tail
   };
 }
 
@@ -63,11 +65,14 @@ function move(gameState: GameState): MoveResponse {
   AvoidNeckMoves(gameState, scoredMoves);
   AvoidOutOfBoundsMoves(gameState, scoredMoves);
   AvoidOwnBodyMoves(gameState, scoredMoves);
-  PreferTowardCentreMoves(gameState, scoredMoves);
+  //PreferTowardCentreMoves(gameState, scoredMoves);
   PreferTowardsClosestFoodMoves(gameState, scoredMoves);
+  StillPreferFoodEvenIfNotStarving(gameState, scoredMoves);
   PreferAwayFromOtherSnakeBody(gameState, scoredMoves);
   PreferTowardOwnTail(gameState, scoredMoves);
+  PreferAwayFromLargerSnakeHead(gameState, scoredMoves);
 
+  CountOpenSquares(gameState, scoredMoves);
   // TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
 
 
