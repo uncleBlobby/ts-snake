@@ -16,7 +16,7 @@ export const checkIfCoordIsSnake = (gs: GameState, target: Coord): boolean => {
 }
 
 export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
-    let myHead: Coord = gs.you.head;
+    let myHead: Coord = gs.you.body[0];
 
     // distance from my head to each wall
 
@@ -32,7 +32,22 @@ export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
 
     for (let i = myHead.x - 1; i >= 0; i--){
         if (!checkIfCoordIsSnake(gs, {x: i, y: myHead.y})){
+            console.log(`we have left clearance here, my head at ${JSON.stringify(myHead)}`)
             clearanceLeft++;
+            for (let j = myHead.y + 1; j < gs.board.height; j++){
+                if(!checkIfCoordIsSnake(gs, {x: i, y: j})){
+                    clearanceLeft++
+                } else {
+                    break;
+                }
+            }
+            for (let j = myHead.y - 1 ; j >= 0; j--){
+                if(!checkIfCoordIsSnake(gs, {x: i, y: j})){
+                    clearanceLeft++
+                } else {
+                    break;
+                }
+            }
         } else {
             break;
         }
@@ -41,6 +56,20 @@ export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
     for (let i = myHead.x + 1; i < gs.board.width; i++){
         if (!checkIfCoordIsSnake(gs, {x: i, y: myHead.y})){
             clearanceRight++;
+            for (let j = myHead.y + 1; j < gs.board.height; j++){
+                if(!checkIfCoordIsSnake(gs, {x: i, y: j})){
+                    clearanceRight++
+                } else {
+                    break;
+                }
+            }
+            for (let j = myHead.y - 1; j >= 0; j--){
+                if(!checkIfCoordIsSnake(gs, {x: i, y: j})){
+                    clearanceRight++
+                } else {
+                    break;
+                }
+            }
         } else {
             break;
         }
@@ -49,6 +78,20 @@ export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
     for (let i = myHead.y - 1; i >= 0; i--){
         if (!checkIfCoordIsSnake(gs, {x: myHead.x, y: i})){
             clearanceBottom++;
+            for (let j = myHead.x; j < gs.board.width; j++){
+                if(!checkIfCoordIsSnake(gs, {x: j, y: i})){
+                    clearanceBottom++;
+                } else {
+                    break;
+                }
+            }
+            for (let j = myHead.x -1; j >=0; j--){
+                if(!checkIfCoordIsSnake(gs, {x: j, y: i})){
+                    clearanceBottom++;
+                } else {
+                    break;
+                }
+            }
         } else {
             break;
         }
@@ -57,6 +100,20 @@ export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
     for (let i = myHead.y + 1; i < gs.board.height; i++){
         if (!checkIfCoordIsSnake(gs, {x: myHead.x, y: i})){
             clearanceTop++;
+            for (let j = myHead.x; j < gs.board.width; j++){
+                if(!checkIfCoordIsSnake(gs, {x: j, y: i})){
+                    clearanceTop++;
+                } else {
+                    break;
+                }
+            }
+            for (let j = myHead.x -1; j >=0; j--){
+                if(!checkIfCoordIsSnake(gs, {x: j, y: i})){
+                    clearanceTop++;
+                } else {
+                    break;
+                }
+            }
         } else {
             break;
         }
@@ -67,12 +124,13 @@ export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
     console.log(`clearanceDown: ${clearanceBottom}`)
     console.log(`clearanceUp: ${clearanceTop}`)
     
+    const myLength = gs.you.body.length;
 
 
-    moves.left.score += clearanceLeft * 15;
-    moves.right.score += clearanceRight * 15;
-    moves.down.score += clearanceBottom * 15;
-    moves.up.score += clearanceTop * 15;
+    moves.left.score += clearanceLeft * 2;
+    moves.right.score += clearanceRight * 2;
+    moves.down.score += clearanceBottom * 2;
+    moves.up.score += clearanceTop * 2;
 }
 
 

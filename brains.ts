@@ -266,7 +266,7 @@ export const PreferTowardOwnTail = (gameState: GameState, scoredMoves: ScoredMov
     const myHead = gameState.you.body[0];
     const myTail = gameState.you.body[gameState.you.body.length - 1];
     const myHealth = gameState.you.health;
-    const tailPrefValue = myHealth / 4;
+    const tailPrefValue = myHealth / 5;
 
     const directionToTail: string = getGeneralDirectionToCoord(gameState, myTail);
     switch(directionToTail){
