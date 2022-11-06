@@ -208,11 +208,11 @@ export const getGeneralDirectionToCoord = (gameState: GameState, target: Coord) 
 }
 
 export const generateRandomHexColor = () => {
-    let r = randomBetween(0, 255);
+    let r = 241;
     const rHex = r.toString(16);
-    let g = randomBetween(0, 255);
+    let g = 241;
     const gHex = g.toString(16);
-    let b = randomBetween(0, 255);
+    let b = 241;
     const bHex = b.toString(16);
 
     console.log(`#${rHex}${gHex}${bHex}`)
