@@ -225,3 +225,21 @@ export const randomBetween = (min: number, max: number): number => {
     max= Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
 }
+
+export const FindNextCoord = (gs: GameState, direction: string, start: Coord): Coord => {
+
+
+    switch (direction){
+        case "left":
+            return {x: start.x - 1, y: start.y};
+        case "right":
+            return {x: start.x + 1, y: start.y};
+        case "up":
+            return {x: start.x, y: start.y + 1};
+        case "down":
+            return {x: start.x, y: start.y - 1};
+        default: 
+            console.log(`error in finding next coord...`);
+            return {x: -1, y: -1}
+    }
+}

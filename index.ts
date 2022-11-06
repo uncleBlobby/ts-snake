@@ -11,7 +11,8 @@
 // For more info see docs.battlesnake.com
 
 import { AvoidNeckMoves, AvoidOutOfBoundsMoves, AvoidOwnBodyMoves, PreferAwayFromLargerSnakeHead, PreferAwayFromOtherSnakeBody, PreferTowardCentreMoves, PreferTowardOwnTail, PreferTowardsClosestFoodMoves, StillPreferFoodEvenIfNotStarving } from './brains';
-import { getClosestFoodCoord, getGeneralDirectionToCoord, getHighScoreMove, generateRandomHexColor, CountOpenSquares } from './helper';
+import { getHighScoreMove, generateRandomHexColor, CountOpenSquares } from './helper';
+import { PreferNotSaucyMoves } from './sauce';
 import runServer from './server';
 import { GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
 
@@ -69,6 +70,8 @@ function move(gameState: GameState): MoveResponse {
   PreferTowardsClosestFoodMoves(gameState, scoredMoves);
   StillPreferFoodEvenIfNotStarving(gameState, scoredMoves);
   PreferAwayFromOtherSnakeBody(gameState, scoredMoves);
+
+  PreferNotSaucyMoves(gameState, scoredMoves);
   PreferTowardOwnTail(gameState, scoredMoves);
   PreferAwayFromLargerSnakeHead(gameState, scoredMoves);
 
