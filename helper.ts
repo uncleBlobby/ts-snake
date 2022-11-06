@@ -32,7 +32,7 @@ export const CountOpenSquares = (gs: GameState, moves: ScoredMoves) => {
 
     for (let i = myHead.x - 1; i >= 0; i--){
         if (!checkIfCoordIsSnake(gs, {x: i, y: myHead.y})){
-            console.log(`we have left clearance here, my head at ${JSON.stringify(myHead)}`)
+            //console.log(`we have left clearance here, my head at ${JSON.stringify(myHead)}`)
             clearanceLeft++;
             for (let j = myHead.y + 1; j < gs.board.height; j++){
                 if(!checkIfCoordIsSnake(gs, {x: i, y: j})){
@@ -208,14 +208,20 @@ export const getGeneralDirectionToCoord = (gameState: GameState, target: Coord) 
 }
 
 export const generateRandomHexColor = () => {
-    let r = Math.floor(Math.random() * 255) + 110;
+    let r = randomBetween(0, 255);
     const rHex = r.toString(16);
-    let g = Math.floor(Math.random() * 255) + 110;
+    let g = randomBetween(0, 255);
     const gHex = g.toString(16);
-    let b = Math.floor(Math.random() * 255) + 110;
+    let b = randomBetween(0, 255);
     const bHex = b.toString(16);
 
     console.log(`#${rHex}${gHex}${bHex}`)
     let hexString = `#${rHex}${gHex}${bHex}`;
     return hexString;
+}
+
+export const randomBetween = (min: number, max: number): number => {
+    min = Math.ceil(min);
+    max= Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
 }

@@ -123,26 +123,34 @@ export const StillPreferFoodEvenIfNotStarving = (gs: GameState, moves: ScoredMov
   const myDistanceToClosestFood = getDistanceBetweenCoords(myHead, closestFoodCoord)
 
   let meBeClosestToTheFood = true;
+  let meBeLongestSnakeOnBoard = true;
 
   for (let i = 0; i < gs.board.snakes.length; i++){
     if (myDistanceToClosestFood > getDistanceBetweenCoords(gs.board.snakes[i].head, closestFoodCoord)){
       meBeClosestToTheFood = false;
     }
+    if(gs.board.snakes[i].body.length > gs.you.body.length){
+      meBeLongestSnakeOnBoard = false;
+    }
   }
 
-  if (meBeClosestToTheFood){
+  
+
+
+
+  if (meBeClosestToTheFood && !meBeLongestSnakeOnBoard){
     switch(getGeneralDirectionToCoord(gs, closestFoodCoord)){
       case "right":
-        moves.right.score += 35;
+        moves.right.score += 55;
         break;
       case "left":
-        moves.left.score += 35;
+        moves.left.score += 55;
         break;
       case "up":
-        moves.up.score += 35;
+        moves.up.score += 55;
         break;
       case "down":
-        moves.down.score += 35;
+        moves.down.score += 55;
         break;
       default:
         break;
@@ -266,7 +274,7 @@ export const PreferTowardOwnTail = (gameState: GameState, scoredMoves: ScoredMov
     const myHead = gameState.you.body[0];
     const myTail = gameState.you.body[gameState.you.body.length - 1];
     const myHealth = gameState.you.health;
-    const tailPrefValue = myHealth / 5;
+    const tailPrefValue = gameState.you.body.length / 2;
 
     const directionToTail: string = getGeneralDirectionToCoord(gameState, myTail);
     switch(directionToTail){
