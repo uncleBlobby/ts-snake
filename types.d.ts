@@ -87,4 +87,10 @@ export interface Coord {
     up: Move;
     down: Move;
   }
-  
+
+export const enum FCoordStatus {
+  EMPTY,
+  SNAKE,
+  FOOD,
+  HAZARD
+}

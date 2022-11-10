@@ -1,4 +1,4 @@
-import { GameState, ScoredMoves } from "./types";
+import { Coord, GameState, ScoredMoves } from "./types";
 import { getClosestFoodCoord, getDistanceBetweenCoords, getGeneralDirectionToCoord } from "./helper";
 
 export const AvoidNeckMoves = (gameState: GameState, scoredMoves: ScoredMoves) => {
@@ -294,3 +294,4 @@ export const PreferTowardOwnTail = (gameState: GameState, scoredMoves: ScoredMov
           break;
       }
 }
+
