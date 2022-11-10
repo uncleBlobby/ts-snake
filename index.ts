@@ -11,10 +11,11 @@
 // For more info see docs.battlesnake.com
 
 import { AvoidNeckMoves, AvoidOutOfBoundsMoves, AvoidOwnBodyMoves, PreferAwayFromLargerSnakeHead, PreferAwayFromOtherSnakeBody, PreferTowardCentreMoves, PreferTowardOwnTail, PreferTowardsClosestFoodMoves, StillPreferFoodEvenIfNotStarving } from './brains';
+import { foodNodeMap, hazNodeMap, initNodeMap, snakeNodeMap } from './flood';
 import { getHighScoreMove, generateRandomHexColor, CountOpenSquares } from './helper';
 import { PreferNotSaucyMoves } from './sauce';
 import runServer from './server';
-import { GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
+import { Coord, FCoordStatus, GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
 
 // info is called when you create your Battlesnake on play.battlesnake.com
 // and controls your Battlesnake's appearance
@@ -48,6 +49,12 @@ function end(gameState: GameState): void {
 // Valid moves are "up", "down", "left", or "right"
 // See https://docs.battlesnake.com/api/example-move for available data
 function move(gameState: GameState): MoveResponse {
+
+  let nodeMap: Map<Coord, FCoordStatus> = initNodeMap(gameState);
+  nodeMap = snakeNodeMap(gameState, nodeMap);
+  nodeMap = foodNodeMap(gameState, nodeMap);
+  nodeMap = hazNodeMap(gameState, nodeMap);
+  console.log(nodeMap);
 
   let isMoveSafe: { [key: string]: boolean; } = {
     up: true,
