@@ -1,6 +1,10 @@
 import { GameState, Coord, Move, ScoredMoves } from "./types";
 
 export const checkIfCoordIsSnake = (gs: GameState, target: Coord): boolean => {
+
+    // need to write this to take the node map as a parameter
+    // and check whether target is a member of node map snakes.
+    
     const snakes = gs.board.snakes;
 
     for (let i = 0; i < gs.board.snakes.length; i++){
