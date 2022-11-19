@@ -12,7 +12,7 @@
 
 import { AvoidNeckMoves, AvoidOutOfBoundsMoves, AvoidOwnBodyMoves, PreferAwayFromLargerSnakeHead, PreferAwayFromOtherSnakeBody, PreferTowardCentreMoves, PreferTowardOwnTail, PreferTowardsClosestFoodMoves, StillPreferFoodEvenIfNotStarving } from './brains';
 import { foodNodeMap, hazNodeMap, initNodeMap, snakeNodeMap } from './flood';
-import { getHighScoreMove, generateRandomHexColor, CountOpenSquares } from './helper';
+import { getHighScoreMove, generateRandomHexColor, CountOpenSquares, CountOpenNodes } from './helper';
 import { PreferNotSaucyMoves } from './sauce';
 import runServer from './server';
 import { Coord, FCoordStatus, GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
@@ -50,11 +50,12 @@ function end(gameState: GameState): void {
 // See https://docs.battlesnake.com/api/example-move for available data
 function move(gameState: GameState): MoveResponse {
 
-  let nodeMap: Map<Coord, FCoordStatus> = initNodeMap(gameState);
+  let nodeMap: Map<string, FCoordStatus> = initNodeMap(gameState);
   nodeMap = snakeNodeMap(gameState, nodeMap);
   nodeMap = foodNodeMap(gameState, nodeMap);
   nodeMap = hazNodeMap(gameState, nodeMap);
-  console.log(nodeMap);
+  //console.log(nodeMap);
+  //console.log(nodeMap.size)
 
   let isMoveSafe: { [key: string]: boolean; } = {
     up: true,
@@ -82,7 +83,11 @@ function move(gameState: GameState): MoveResponse {
   PreferTowardOwnTail(gameState, scoredMoves);
   PreferAwayFromLargerSnakeHead(gameState, scoredMoves);
 
-  CountOpenSquares(gameState, scoredMoves);
+  // old flood
+  //CountOpenSquares(gameState, scoredMoves);
+
+  // new flood
+  CountOpenNodes(gameState, nodeMap, scoredMoves);
   // TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
 
 
