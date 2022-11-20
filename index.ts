@@ -51,67 +51,27 @@ function end(gameState: GameState): void {
 // See https://docs.battlesnake.com/api/example-move for available data
 function move(gameState: GameState): MoveResponse {
 
+  //  TODO: implement logic in such a way that we can run a
+  //        'basicTurn' function for each snake in the game
+  //        and associate their scoredMoves with each snakeID.
+  //  THEN: implement a function that updates the gameState with
+  //        each snake's 'predicted' move and iterate again
+
   let nodeMap: Map<string, FCoordStatus> = initNodeMap(gameState);
   nodeMap = snakeNodeMap(gameState, nodeMap);
   nodeMap = foodNodeMap(gameState, nodeMap);
   nodeMap = hazNodeMap(gameState, nodeMap);
-  //console.log(nodeMap);
-  //console.log(nodeMap.size)
-
-  let isMoveSafe: { [key: string]: boolean; } = {
-    up: true,
-    down: true,
-    left: true,
-    right: true
-  };
 
   let scoredMoves: ScoredMoves = {  left:   {direction: "left",   score: 0}, 
                                     right:  {direction: "right",  score: 0},
                                     up:     {direction: "up",     score: 0},
-                                    down:   {direction: "down",   score: 0}}
-                                    let scoredMoves2: ScoredMoves = basicTurn(gameState, scoredMoves, nodeMap);
+                                    down:   {direction: "down",   score: 0}};
 
-
-  AvoidNeckMoves(gameState, scoredMoves);
-  AvoidOutOfBoundsMoves(gameState, scoredMoves);
-  AvoidOwnBodyMoves(gameState, scoredMoves);
-  //PreferTowardCentreMoves(gameState, scoredMoves);
-  PreferTowardsClosestFoodMoves(gameState, scoredMoves);
-  StillPreferFoodEvenIfNotStarving(gameState, scoredMoves);
-  PreferAwayFromOtherSnakeBody(gameState, scoredMoves);
-
-  PreferNotSaucyMoves(gameState, scoredMoves);
-  PreferTowardOwnTail(gameState, scoredMoves);
-  PreferAwayFromLargerSnakeHead(gameState, scoredMoves);
-
-  // old flood
-  //CountOpenSquares(gameState, scoredMoves);
-
-  // new flood
-  CountOpenNodes(gameState, nodeMap, scoredMoves);
-  // TODO: Step 3 - Prevent your Battlesnake from colliding with other Battlesnakes
-
-
-
-
-  // Are there any safe moves left?
-  const safeMoves = Object.keys(isMoveSafe).filter(key => isMoveSafe[key]);
-
-  console.log(`scoredMoves: ${JSON.stringify(scoredMoves)}`);
   
-  console.log(`scoredMoves2: ${JSON.stringify(scoredMoves2)}`);
-  /*
-  if (safeMoves.length == 0) {
-    console.log(`MOVE ${gameState.turn}: No safe moves detected! Moving down`);
-    return { move: "down" };
-  }
-  */
-
-  // Choose a random move from the safe moves
+  scoredMoves = basicTurn(gameState, scoredMoves, nodeMap)  
+  
+  // Choose the highest scored move and send response
   const nextMove = getHighScoreMove(scoredMoves);
-
-  // TODO: Step 4 - Move towards food instead of random, to regain health and survive longer
-  // food = gameState.board.food;
 
   console.log(`MOVE ${gameState.turn}: ${nextMove}`)
   return { move: nextMove };

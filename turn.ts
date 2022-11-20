@@ -68,7 +68,7 @@ export const basicTurn = (gs: GameState, sm: ScoredMoves, nm: Map<string, FCoord
     //  PreferNotSaucyMoves
     //  Adds weight to prefer not moving into the sauce.
     //  TODO: Adjust weight calculation (based on hazard damage?)
-    
+
     
     PreferNotSaucyMoves(gs, sm)
 
@@ -87,6 +87,16 @@ export const basicTurn = (gs: GameState, sm: ScoredMoves, nm: Map<string, FCoord
     //  TODO:   add any more dangerous coords as they come up
 
     PreferAwayFromLargerSnakeHead(gs, sm);
+
+    //
+    //  CountOpenNodes
+    //  New Flood fill algo with FCOORD datatype
+    //  TODO:   implement flag to determine whether a coord has or has not been
+    //  searched in a particular direction
+    //  TODO:   implement next iteration so we can search backward behind ourselves
+    //          and around corners
     CountOpenNodes(gs, nm, sm);
+
+    
     return sm;
 }
