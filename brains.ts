@@ -7,43 +7,46 @@ export const AvoidNeckMoves = (gameState: GameState, scoredMoves: ScoredMoves) =
   const myNeck = gameState.you.body[1];
 
   if (myNeck.x < myHead.x) {        // Neck is left of head, don't move left
-    scoredMoves.left.score -= 1000;
+    scoredMoves.left.score -= 10000;
   }
 
   if (myNeck.x > myHead.x) { // Neck is right of head, don't move right
-    scoredMoves.right.score -= 1000;
+    scoredMoves.right.score -= 10000;
   }
 
   if (myNeck.y < myHead.y) { // Neck is below head, don't move down
-    scoredMoves.down.score -= 1000;
+    scoredMoves.down.score -= 10000;
   }
 
   if (myNeck.y > myHead.y) { // Neck is above head, don't move up
-    scoredMoves.up.score -= 1000;
+    scoredMoves.up.score -= 10000;
   }
 }
 
 export const AvoidOutOfBoundsMoves = (gameState: GameState, scoredMoves: ScoredMoves) => {
-    const myHead = gameState.you.body[0];
+    if (gameState.game.ruleset.name != "wrapped"){
+      const myHead = gameState.you.body[0];
 
-    const boardWidth = gameState.board.width;
-    const boardHeight = gameState.board.height;
-  
-    if (myHead.x - 1 < 0){
-      scoredMoves.left.score -= 1000;
+      const boardWidth = gameState.board.width;
+      const boardHeight = gameState.board.height;
+    
+      if (myHead.x - 1 < 0){
+        scoredMoves.left.score -= 1000;
+      }
+    
+      if (myHead.x + 1 >= boardWidth){
+        scoredMoves.right.score -= 1000;
+      }
+    
+      if (myHead.y - 1 < 0){
+        scoredMoves.down.score -= 1000;
+      }
+    
+      if (myHead.y + 1 >= boardHeight){
+        scoredMoves.up.score -= 1000;
+      }
     }
-  
-    if (myHead.x + 1 >= boardWidth){
-      scoredMoves.right.score -= 1000;
-    }
-  
-    if (myHead.y - 1 < 0){
-      scoredMoves.down.score -= 1000;
-    }
-  
-    if (myHead.y + 1 >= boardHeight){
-      scoredMoves.up.score -= 1000;
-    }
+    
 }
 
 export const AvoidOwnBodyMoves = (gameState: GameState, scoredMoves: ScoredMoves) => {
@@ -204,16 +207,16 @@ export const PreferAwayFromOtherSnakeBody = (gameState: GameState, scoredMoves: 
       if(opponents[i].id != gameState.you.id){
         for (let j = 0; j < opponents[i].length; j++){
           if (myHead.x + 1 == opponents[i].body[j].x && myHead.y == opponents[i].body[j].y){
-            scoredMoves.right.score -= 100;
+            scoredMoves.right.score -= 500;
           }
           if (myHead.x - 1 == opponents[i].body[j].x && myHead.y == opponents[i].body[j].y){
-            scoredMoves.left.score -= 100;
+            scoredMoves.left.score -= 500;
           }
           if (myHead.x == opponents[i].body[j].x && myHead.y + 1 == opponents[i].body[j].y){
-            scoredMoves.up.score -= 100;
+            scoredMoves.up.score -= 500;
           }
           if (myHead.x == opponents[i].body[j].x && myHead.y - 1 == opponents[i].body[j].y){
-            scoredMoves.down.score -= 100;
+            scoredMoves.down.score -= 500;
           }
         }
       }
