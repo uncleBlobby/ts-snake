@@ -1,5 +1,6 @@
 import { SnakeAvoidNeck, SnakeAvoidOB, SnakeAvoidOwnBody, SnakePreferAwayFromLargerSnakeHead, SnakePreferAwayFromOtherSnakeBody, SnakePreferTowardClosestFoodMoves, SnakePreferTowardOwnTail } from "./anySnakeBrain";
 import { getDistanceBetweenCoords, checkIfNodeIsSnake } from "./helper"
+import { DetermineNextGameState } from "./nextTurnGameState";
 import { Battlesnake, Coord, FCoordStatus, DepthSearch, GameState, Predicter, ScoredMoves } from "./types";
 
 export const InitDepthSearch = (gs: GameState): DepthSearch => {
@@ -13,7 +14,8 @@ export const InitDepthSearch = (gs: GameState): DepthSearch => {
                 scoredMoves: {  left:   {direction: "left",   score: 0}, 
                                 right:  {direction: "right",  score: 0},
                                 up:     {direction: "up",     score: 0},
-                                down:   {direction: "down",   score: 0}}};
+                                down:   {direction: "down",   score: 0}},
+                bestMove: ""};
 
         }
     }
@@ -66,7 +68,7 @@ export const AnySnakeStillPreferFoodEvenIfNotStarving = (gs: GameState, ds: Dept
     }
 }
 
-export const RunPredicter = (gs: GameState, ds: DepthSearch, nm: Map<string, FCoordStatus>) => {
+export const RunPredicter = (gs: GameState, ds: DepthSearch, nm: Map<string, FCoordStatus>, pc: number, turnStart: number) => {
     const numSnakes = ds.predicter.length;
 
     for (let i = 0; i < numSnakes; i++){
@@ -80,6 +82,17 @@ export const RunPredicter = (gs: GameState, ds: DepthSearch, nm: Map<string, FCo
         SnakePreferTowardOwnTail(gs, ds.predicter[i].snake, ds.predicter[i].scoredMoves);
         SnakeCountOpenNodes(gs, ds.predicter[i].snake, nm, ds.predicter[i].scoredMoves);
     }
+    pc++;
+    //console.log(`predictions ran: ${pc}`)
+    let turnTime = performance.now() - turnStart;
+    if (turnTime < 400 && pc < 2){
+        RunPredicter(DetermineNextGameState(gs, ds), ds, nm, pc, turnStart)
+    } else {
+        console.log(`looked ahead: ${pc} turns`)
+        return;
+    }
+    
+    //DetermineNextGameState(gs, ds);
 }
 
 export const LogDepthSearchResults = (ds: DepthSearch) => {
@@ -236,4 +249,19 @@ export const SnakeCountOpenNodes = (gs: GameState, snake: Battlesnake, nm: Map<s
     scoredMoves.up.score += clearanceTop * 5;
 
     
+}
+
+export const MyPredictor = (snake: Battlesnake, ds: DepthSearch): ScoredMoves => {
+    let sm = {  left:   {direction: "left",   score: 0}, 
+                right:  {direction: "right",  score: 0},
+                up:     {direction: "up",     score: 0},
+                down:   {direction: "down",   score: 0}}
+    
+    for (let i = 0; i < ds.predicter.length; i++){
+        if (snake.id == ds.predicter[i].snake.id){
+            sm = ds.predicter[i].scoredMoves;
+        }
+    }
+    console.log(`my predictor: ${JSON.stringify(sm)}`)
+    return sm;
 }

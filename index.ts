@@ -13,7 +13,7 @@
 import { AvoidNeckMoves, AvoidOutOfBoundsMoves, AvoidOwnBodyMoves, PreferAwayFromLargerSnakeHead, PreferAwayFromOtherSnakeBody, PreferTowardCentreMoves, PreferTowardOwnTail, PreferTowardsClosestFoodMoves, StillPreferFoodEvenIfNotStarving } from './brains';
 import { foodNodeMap, hazNodeMap, initNodeMap, snakeNodeMap } from './flood';
 import { getHighScoreMove, generateRandomHexColor, CountOpenSquares, CountOpenNodes } from './helper';
-import { AnySnakeAvoidNeckMoves, AnySnakeAvoidOutOfBoundsMoves, AnySnakeAvoidOwnBodyMoves, AnySnakePreferTowardsClosestFoodMoves, InitDepthSearch, LogDepthSearchResults, RunPredicter } from './prediction';
+import { AnySnakeAvoidNeckMoves, AnySnakeAvoidOutOfBoundsMoves, AnySnakeAvoidOwnBodyMoves, AnySnakePreferTowardsClosestFoodMoves, InitDepthSearch, LogDepthSearchResults, MyPredictor, RunPredicter } from './prediction';
 import { PreferNotSaucyMoves } from './sauce';
 import runServer from './server';
 import { basicTurn } from './turn';
@@ -52,6 +52,8 @@ function end(gameState: GameState): void {
 // See https://docs.battlesnake.com/api/example-move for available data
 function move(gameState: GameState): MoveResponse {
 
+  const turnStart = performance.now();
+
   //  TODO: implement logic in such a way that we can run a
   //        'basicTurn' function for each snake in the game
   //        and associate their scoredMoves with each snakeID.
@@ -67,8 +69,8 @@ function move(gameState: GameState): MoveResponse {
 
   //console.log(JSON.stringify(depthSearch))
 
-
-  RunPredicter(gameState, depthSearch, nodeMap);
+  let predictionCounter = 0;
+  RunPredicter(gameState, depthSearch, nodeMap, predictionCounter, turnStart);
   LogDepthSearchResults(depthSearch);
 
 
@@ -81,7 +83,7 @@ function move(gameState: GameState): MoveResponse {
   scoredMoves = basicTurn(gameState, scoredMoves, nodeMap)  
   
   // Choose the highest scored move and send response
-  const nextMove = getHighScoreMove(scoredMoves);
+  const nextMove = getHighScoreMove(MyPredictor(gameState.you, depthSearch));
 
   console.log(`MOVE ${gameState.turn}: ${nextMove}`)
   return { move: nextMove };

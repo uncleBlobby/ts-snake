@@ -7,19 +7,19 @@ export const SnakeAvoidNeck = (snake: Battlesnake, scoredMoves: ScoredMoves) => 
     const neck = snake.body[1];
 
     if (neck.x < head.x) {        // Neck is left of head, don't move left
-        scoredMoves.left.score -= 10000;
+        scoredMoves.left.score -= 1000000;
       }
     
       if (neck.x > head.x) { // Neck is right of head, don't move right
-        scoredMoves.right.score -= 10000;
+        scoredMoves.right.score -= 1000000;
       }
     
       if (neck.y < head.y) { // Neck is below head, don't move down
-        scoredMoves.down.score -= 10000;
+        scoredMoves.down.score -= 1000000;
       }
     
       if (neck.y > head.y) { // Neck is above head, don't move up
-        scoredMoves.up.score -= 10000;
+        scoredMoves.up.score -= 1000000;
       }
 }
 
@@ -30,19 +30,19 @@ export const SnakeAvoidOB = (gameState: GameState, snake: Battlesnake, scoredMov
         const BH = gameState.board.height;
 
         if (head.x - 1 < 0){
-            scoredMoves.left.score -= 1000;
+            scoredMoves.left.score -= 100000;
         }
     
         if (head.x + 1 >= BW){
-            scoredMoves.right.score -= 1000;
+            scoredMoves.right.score -= 100000;
         }
     
         if (head.y - 1 < 0){
-            scoredMoves.down.score -= 1000;
+            scoredMoves.down.score -= 100000;
         }
     
         if (head.y + 1 >= BH){
-            scoredMoves.up.score -= 1000;
+            scoredMoves.up.score -= 100000;
         }
     }
 }
@@ -55,38 +55,38 @@ export const SnakeAvoidOwnBody = (snake: Battlesnake, scoredMoves: ScoredMoves) 
         for (let i = 0; i < body.length - 1; i++){
           if (head.x + 1 == body[i].x && head.y == body[i].y){
             
-            scoredMoves.right.score -= 1000;
+            scoredMoves.right.score -= 10000;
           }
           if (head.x - 1 == body[i].x && head.y == body[i].y){
             
-            scoredMoves.left.score -= 1000;
+            scoredMoves.left.score -= 10000;
           }
           if (head.x == body[i].x && head.y + 1 == body[i].y){
             
-            scoredMoves.up.score -= 1000;
+            scoredMoves.up.score -= 10000;
           }
           if (head.x == body[i].x && head.y - 1== body[i].y){
             
-            scoredMoves.down.score -= 1000;
+            scoredMoves.down.score -= 10000;
           }
         }
       } else {
         for (let i = 0; i < body.length; i++){
           if (head.x + 1 == body[i].x && head.y == body[i].y){
             
-            scoredMoves.right.score -= 1000;
+            scoredMoves.right.score -= 10000;
           }
           if (head.x - 1 == body[i].x && head.y == body[i].y){
             
-            scoredMoves.left.score -= 1000;
+            scoredMoves.left.score -= 10000;
           }
           if (head.x == body[i].x && head.y + 1 == body[i].y){
             
-            scoredMoves.up.score -= 1000;
+            scoredMoves.up.score -= 10000;
           }
           if (head.x == body[i].x && head.y - 1== body[i].y){
             
-            scoredMoves.down.score -= 1000;
+            scoredMoves.down.score -= 10000;
           }
         }
       }
@@ -163,16 +163,16 @@ export const SnakePreferAwayFromOtherSnakeBody = (gs: GameState, snake: Battlesn
         if (opponents[i].id != snake.id){
             for (let j = 0; j < opponents[i].length; j++){
                 if (head.x + 1 == opponents[i].body[j].x && head.y == opponents[i].body[j].y){
-                  scoredMoves.right.score -= 500;
+                  scoredMoves.right.score -= 5000;
                 }
                 if (head.x - 1 == opponents[i].body[j].x && head.y == opponents[i].body[j].y){
-                  scoredMoves.left.score -= 500;
+                  scoredMoves.left.score -= 5000;
                 }
                 if (head.x == opponents[i].body[j].x && head.y + 1 == opponents[i].body[j].y){
-                  scoredMoves.up.score -= 500;
+                  scoredMoves.up.score -= 5000;
                 }
                 if (head.x == opponents[i].body[j].x && head.y - 1 == opponents[i].body[j].y){
-                  scoredMoves.down.score -= 500;
+                  scoredMoves.down.score -= 5000;
                 }
               }
         }
@@ -188,39 +188,39 @@ export const SnakePreferAwayFromLargerSnakeHead = (gs: GameState, snake: Battles
             let enemy = opponents[i];
             if (enemy.body.length >= snake.body.length){
                 if (head.x + 2 == enemy.head.x && head.y == enemy.head.y){
-                  scoredMoves.right.score -= 155;
+                  scoredMoves.right.score -= 1550;
                 }
           
                 if (head.x - 2 == enemy.head.x && head.y == enemy.head.y){
-                  scoredMoves.left.score -= 155;
+                  scoredMoves.left.score -= 1550;
                 }
           
                 if (head.x == enemy.head.x && head.y + 2 == enemy.head.y){
-                  scoredMoves.up.score -= 155;
+                  scoredMoves.up.score -= 1550;
                 }
           
                 if (head.x == enemy.head.x && head.y -2 == enemy.head.y){
-                  scoredMoves.down.score -= 155;
+                  scoredMoves.down.score -= 1550;
                 }
         
                 if (head.x == enemy.head.x + 1 && head.y == enemy.head.y - 1){
-                  scoredMoves.up.score -= 155;
-                  scoredMoves.left.score -= 155;
+                  scoredMoves.up.score -= 1550;
+                  scoredMoves.left.score -= 1550;
                 }
         
                 if (head.x == enemy.head.x - 1 && head.y == enemy.head.y - 1){
-                  scoredMoves.up.score -= 155;
-                  scoredMoves.right.score -= 155;
+                  scoredMoves.up.score -= 1550;
+                  scoredMoves.right.score -= 1550;
                 }
         
                 if (head.x == enemy.head.x + 1 && head.y == enemy.head.y + 1){
-                  scoredMoves.down.score -= 155;
-                  scoredMoves.left.score -= 155;
+                  scoredMoves.down.score -= 1550;
+                  scoredMoves.left.score -= 1550;
                 }
         
                 if (head.x == enemy.head.x - 1 && head.y == enemy.head.y + 1){
-                  scoredMoves.down.score -= 155;
-                  scoredMoves.right.score -= 155;
+                  scoredMoves.down.score -= 1550;
+                  scoredMoves.right.score -= 1550;
                 }
         
               }

@@ -98,6 +98,7 @@ export const enum FCoordStatus {
 export interface Predicter {
   snake: Battlesnake;
   scoredMoves: ScoredMoves;
+  bestMove: string;
 }
 
 export interface DepthSearch {
