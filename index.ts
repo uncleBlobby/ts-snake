@@ -15,6 +15,7 @@ import { foodNodeMap, hazNodeMap, initNodeMap, snakeNodeMap } from './flood';
 import { getHighScoreMove, generateRandomHexColor, CountOpenSquares, CountOpenNodes } from './helper';
 import { PreferNotSaucyMoves } from './sauce';
 import runServer from './server';
+import { basicTurn } from './turn';
 import { Coord, FCoordStatus, GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
 
 // info is called when you create your Battlesnake on play.battlesnake.com
@@ -68,7 +69,7 @@ function move(gameState: GameState): MoveResponse {
                                     right:  {direction: "right",  score: 0},
                                     up:     {direction: "up",     score: 0},
                                     down:   {direction: "down",   score: 0}}
-
+                                    let scoredMoves2: ScoredMoves = basicTurn(gameState, scoredMoves, nodeMap);
 
 
   AvoidNeckMoves(gameState, scoredMoves);
@@ -96,8 +97,9 @@ function move(gameState: GameState): MoveResponse {
   // Are there any safe moves left?
   const safeMoves = Object.keys(isMoveSafe).filter(key => isMoveSafe[key]);
 
-  console.log(scoredMoves);
-
+  console.log(`scoredMoves: ${JSON.stringify(scoredMoves)}`);
+  
+  console.log(`scoredMoves2: ${JSON.stringify(scoredMoves2)}`);
   /*
   if (safeMoves.length == 0) {
     console.log(`MOVE ${gameState.turn}: No safe moves detected! Moving down`);
