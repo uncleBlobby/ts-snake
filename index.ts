@@ -13,10 +13,11 @@
 import { AvoidNeckMoves, AvoidOutOfBoundsMoves, AvoidOwnBodyMoves, PreferAwayFromLargerSnakeHead, PreferAwayFromOtherSnakeBody, PreferTowardCentreMoves, PreferTowardOwnTail, PreferTowardsClosestFoodMoves, StillPreferFoodEvenIfNotStarving } from './brains';
 import { foodNodeMap, hazNodeMap, initNodeMap, snakeNodeMap } from './flood';
 import { getHighScoreMove, generateRandomHexColor, CountOpenSquares, CountOpenNodes } from './helper';
+import { AnySnakeAvoidNeckMoves, AnySnakeAvoidOutOfBoundsMoves, AnySnakeAvoidOwnBodyMoves, AnySnakePreferTowardsClosestFoodMoves, InitDepthSearch, LogDepthSearchResults, RunPredicter } from './prediction';
 import { PreferNotSaucyMoves } from './sauce';
 import runServer from './server';
 import { basicTurn } from './turn';
-import { Coord, FCoordStatus, GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
+import { Coord, DepthSearch, FCoordStatus, GameState, InfoResponse, MoveResponse, ScoredMoves } from './types';
 
 // info is called when you create your Battlesnake on play.battlesnake.com
 // and controls your Battlesnake's appearance
@@ -61,6 +62,15 @@ function move(gameState: GameState): MoveResponse {
   nodeMap = snakeNodeMap(gameState, nodeMap);
   nodeMap = foodNodeMap(gameState, nodeMap);
   nodeMap = hazNodeMap(gameState, nodeMap);
+
+  let depthSearch: DepthSearch | undefined = InitDepthSearch(gameState);
+
+  //console.log(JSON.stringify(depthSearch))
+
+
+  RunPredicter(gameState, depthSearch, nodeMap);
+  LogDepthSearchResults(depthSearch);
+
 
   let scoredMoves: ScoredMoves = {  left:   {direction: "left",   score: 0}, 
                                     right:  {direction: "right",  score: 0},

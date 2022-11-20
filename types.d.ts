@@ -94,3 +94,12 @@ export const enum FCoordStatus {
   FOOD,
   HAZARD
 }
+
+export interface Predicter {
+  snake: Battlesnake;
+  scoredMoves: ScoredMoves;
+}
+
+export interface DepthSearch {
+  predicter: Predicter[];
+}
