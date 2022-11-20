@@ -293,5 +293,24 @@ export const PreferTowardOwnTail = (gameState: GameState, scoredMoves: ScoredMov
         default:
           break;
       }
+    
+    if (myHealth > 75){
+      switch(directionToTail){
+          case "right":
+            scoredMoves.right.score += tailPrefValue *2;
+            break;
+          case "left":
+            scoredMoves.left.score += tailPrefValue *2;
+            break;
+          case "up":
+            scoredMoves.up.score += tailPrefValue *2;
+            break;
+          case "down":
+            scoredMoves.down.score += tailPrefValue *2;
+            break;
+          default:
+            break;
+      }
+    }
 }
 
