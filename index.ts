@@ -69,9 +69,9 @@ function move(gameState: GameState): MoveResponse {
 
   //console.log(JSON.stringify(depthSearch))
 
-  let predictionCounter = 0;
-  RunPredicter(gameState, depthSearch, nodeMap, predictionCounter, turnStart);
-  LogDepthSearchResults(depthSearch);
+  //let predictionCounter = 0;
+  //RunPredicter(gameState, depthSearch, nodeMap, predictionCounter, turnStart);
+  //LogDepthSearchResults(depthSearch);
 
 
   let scoredMoves: ScoredMoves = {  left:   {direction: "left",   score: 0}, 
@@ -83,7 +83,12 @@ function move(gameState: GameState): MoveResponse {
   scoredMoves = basicTurn(gameState, scoredMoves, nodeMap)  
   
   // Choose the highest scored move and send response
-  const nextMove = getHighScoreMove(MyPredictor(gameState.you, depthSearch));
+
+  // Currently predicted Next Move is not worth using, needs real debugging.
+  //const nextMove = getHighScoreMove(MyPredictor(gameState.you, depthSearch));
+  
+  
+  const nextMove = getHighScoreMove(scoredMoves);
 
   console.log(`MOVE ${gameState.turn}: ${nextMove}`)
   return { move: nextMove };
